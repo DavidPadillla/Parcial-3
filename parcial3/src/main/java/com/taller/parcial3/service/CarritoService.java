@@ -18,7 +18,6 @@ public class CarritoService {
     private final ProductoRepository productoRepository;
 
     public Carrito crearCarrito(Usuario usuario, List<Integer> idsProductos) {
-
         Carrito carrito = new Carrito();
         carrito.setUsuario(usuario);
 
@@ -29,16 +28,13 @@ public class CarritoService {
                 .map(id -> productoRepository.findById(id).orElseThrow())
                 .toList();
 
-        // Descontar stock y calcular subtotal
         for (Producto p : productos) {
             p.setStock(p.getStock() - 1);
             productoRepository.save(p);
-
             subtotal += p.getPrecio();
         }
 
         impuestos = subtotal * 0.19;
-
         carrito.setProductos(productos);
         carrito.setSubtotal(subtotal);
         carrito.setImpuestos(impuestos);

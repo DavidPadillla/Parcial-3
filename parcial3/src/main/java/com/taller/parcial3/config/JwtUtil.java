@@ -12,13 +12,13 @@ import java.util.Date;
 public class JwtUtil {
 
     @Value("${jwt.secret}")
-    private String secret;  // Debe tener mínimo 32 caracteres
+    private String secret;
 
     @Value("${jwt.expiration}")
     private long expiration;
 
     private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes()); // <-- Aquí fallaba porque tu clave era corta
+        return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     public String generateToken(String username) {

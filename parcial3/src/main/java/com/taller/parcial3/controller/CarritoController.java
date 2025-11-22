@@ -22,62 +22,65 @@ public class CarritoController {
     @PostMapping("/crear")
     public CarritoResponse crearCarrito(Authentication auth,
                                         @RequestBody CrearCarritoRequest request) {
-
-        Usuario usuario = usuarioService.buscarPorCorreo(auth.getName()).orElseThrow();
+        Usuario usuario = usuarioService.buscarPorCorreo(auth.getName())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         Carrito carrito = carritoService.crearCarrito(usuario, request.getProductosIds());
 
-        CarritoResponse resp = new CarritoResponse();
-        resp.setIdCarrito(carrito.getIdCarrito());
-        resp.setIdUsuario(usuario.getIdUsuario());
-        resp.setSubtotal(carrito.getSubtotal());
-        resp.setImpuestos(carrito.getImpuestos());
-
-        resp.setProductos(
-                carrito.getProductos().stream().map(p -> {
-                    ProductoDTO dto = new ProductoDTO();
-                    dto.setIdProducto(p.getIdProducto());
-                    dto.setNombre(p.getNombre());
-                    dto.setDescripcion(p.getDescripcion());
-                    dto.setPrecio(p.getPrecio());
-                    dto.setStock(p.getStock());
-                    return dto;
-                }).toList()
+        CarritoResponse response = new CarritoResponse();
+        response.setIdCarrito(carrito.getIdCarrito());
+        response.setIdUsuario(usuario.getIdUsuario());
+        response.setSubtotal(carrito.getSubtotal());
+        response.setImpuestos(carrito.getImpuestos());
+        response.setProductos(
+                carrito.getProductos().stream()
+                        .map(p -> {
+                            ProductoDTO dto = new ProductoDTO();
+                            dto.setIdProducto(p.getIdProducto());
+                            dto.setNombre(p.getNombre());
+                            dto.setDescripcion(p.getDescripcion());
+                            dto.setPrecio(p.getPrecio());
+                            dto.setStock(p.getStock());
+                            return dto;
+                        })
+                        .toList()
         );
-
-        return resp;
+        return response;
     }
 
     @GetMapping("/{idCarrito}")
-    public CarritoResponse obtenerCarrito(Authentication auth,
-                                          @PathVariable Integer idCarrito) {
-
-        Usuario usuario = usuarioService.buscarPorCorreo(auth.getName()).orElseThrow();
+    public CarritoResponse obtenerCarrito(Authentication auth, @PathVariable Integer idCarrito) {
+        Usuario usuario = usuarioService.buscarPorCorreo(auth.getName())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         Carrito carrito = carritoService.buscarCarrito(idCarrito);
 
-        if (carrito == null || !carrito.getUsuario().getIdUsuario().equals(usuario.getIdUsuario())) {
+        if (carrito == null) {
+            throw new RuntimeException("Carrito no encontrado");
+        }
+
+        if (!carrito.getUsuario().getIdUsuario().equals(usuario.getIdUsuario())) {
             throw new RuntimeException("No autorizado para ver este carrito");
         }
 
-        CarritoResponse resp = new CarritoResponse();
-        resp.setIdCarrito(carrito.getIdCarrito());
-        resp.setIdUsuario(usuario.getIdUsuario());
-        resp.setSubtotal(carrito.getSubtotal());
-        resp.setImpuestos(carrito.getImpuestos());
-
-        resp.setProductos(
-                carrito.getProductos().stream().map(p -> {
-                    ProductoDTO dto = new ProductoDTO();
-                    dto.setIdProducto(p.getIdProducto());
-                    dto.setNombre(p.getNombre());
-                    dto.setDescripcion(p.getDescripcion());
-                    dto.setPrecio(p.getPrecio());
-                    dto.setStock(p.getStock());
-                    return dto;
-                }).toList()
+        CarritoResponse response = new CarritoResponse();
+        response.setIdCarrito(carrito.getIdCarrito());
+        response.setIdUsuario(usuario.getIdUsuario());
+        response.setSubtotal(carrito.getSubtotal());
+        response.setImpuestos(carrito.getImpuestos());
+        response.setProductos(
+                carrito.getProductos().stream()
+                        .map(p -> {
+                            ProductoDTO dto = new ProductoDTO();
+                            dto.setIdProducto(p.getIdProducto());
+                            dto.setNombre(p.getNombre());
+                            dto.setDescripcion(p.getDescripcion());
+                            dto.setPrecio(p.getPrecio());
+                            dto.setStock(p.getStock());
+                            return dto;
+                        })
+                        .toList()
         );
-
-        return resp;
+        return response;
     }
 }

@@ -17,7 +17,6 @@ public class ProductoController {
 
     @GetMapping("/stock/{cantidad}")
     public List<ProductoDTO> productosPorStock(@PathVariable int cantidad) {
-
         return productoService.listarStockMenorA(cantidad)
                 .stream()
                 .map(p -> {
@@ -31,6 +30,7 @@ public class ProductoController {
                 })
                 .toList();
     }
+
     @GetMapping("/listar")
     public List<ProductoDTO> listarTodos() {
         return productoService.listarTodos()
@@ -46,6 +46,4 @@ public class ProductoController {
                 })
                 .toList();
     }
-
-
 }

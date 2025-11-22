@@ -6,7 +6,6 @@ import lombok.Data;
 @Entity
 @Data
 public class Usuario {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idUsuario;
@@ -17,8 +16,6 @@ public class Usuario {
     private String correoElectronico;
 
     private String contrasena;
-
     private String direccion;
-
     private String metodoDePago;
 }

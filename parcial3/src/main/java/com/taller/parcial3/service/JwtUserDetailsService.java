@@ -17,14 +17,13 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String correo) throws UsernameNotFoundException {
-
         Usuario usuario = usuarioRepository.findByCorreoElectronico(correo)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + correo));
 
         return User.builder()
                 .username(usuario.getCorreoElectronico())
                 .password(usuario.getContrasena())
-                .roles("USER") // puedes agregar roles si quieres
+                .roles("USER")
                 .build();
     }
 }

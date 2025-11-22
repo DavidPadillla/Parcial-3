@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class LoginRequest {
     private String correoElectronico;
-    private String contrasena; // SIN Ñ
+    private String contrasena;
 }
